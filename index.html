@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Connect</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #101020;
+  color: white;
+}
+header {
+  background: #191932;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #8b5cf6;
+}
+header h1 {
+  color: #d8b4fe;
+  font-size: 25px;
+}
+header p {
+  color: #aaa;
+  margin-top: 6px;
+}
+.wallet {
+  margin: 18px;
+  padding: 20px;
+  background: linear-gradient(120deg,#7028e4,#e43c91);
+  border-radius: 16px;
+  text-align: center;
+}
+.wallet h2 {
+  font-size: 25px;
+}
+.wallet p {
+  margin: 8px;
+}
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+}
+.primary {
+  background: #a855f7;
+  color: white;
+}
+.secondary {
+  background: #252545;
+  color: white;
+  border: 1px solid #777;
+}
+.container {
+  padding: 18px;
+}
+.card {
+  background: #1c1c38;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 16px;
+}
+.card h2 {
+  color: #d8b4fe;
+  margin-bottom: 12px;
+}
+input, select {
+  width: 100%;
+  padding: 13px;
+  border-radius: 9px;
+  border: 1px solid #555;
+  background: #292943;
+  color: white;
+  margin: 8px 0;
+}
+.chatbox {
+  height: 150px;
+  overflow-y: auto;
+  background: #101020;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+.message {
+  padding: 8px;
+  margin: 5px 0;
+  background: #35305b;
+  border-radius: 8px;
+}
+.status {
+  color: #86efac;
+  margin: 10px 0;
+}
+footer {
+  text-align: center;
+  color: #aaa;
+  padding: 25px;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>💜 Random Connect</h1>
+  <p>Meet New People • Make Friends • Chat Online</p>
+</header>
+
+<div class="wallet">
+  <h2>🪙 My Coin Wallet</h2>
+  <p>Available Coins: <strong id="coins">0</strong></p>
+  <button class="primary" onclick="recharge()">
+    + Recharge Coins
+  </button>
+</div>
+
+<div class="container">
+
+<div class="card">
+  <h2>👤 Create Your Account</h2>
+  <input id="username" placeholder="Enter Your Name">
+  <input id="age" type="number" placeholder="Your Age">
+  <select id="gender">
+    <option value="">Select Gender</option>
+    <option value="boy">Boy</option>
+    <option value="girl">Girl</option>
+  </select>
+  <button class="primary" onclick="register()">
+    Register Now
+  </button>
+  <p id="registerStatus" class="status"></p>
+</div>
+
+<div class="card">
+  <h2>💞 Random Connect</h2>
+  <p>Find new friends and start a conversation.</p>
+  <button class="primary" onclick="connect()">
+    🔍 Find Someone
+  </button>
+  <button class="secondary" onclick="stopConnect()">
+    Stop
+  </button>
+  <p id="matchStatus" class="status">Ready to connect</p>
+</div>
+
+<div class="card">
+  <h2>💬 Live Chat Demo</h2>
+  <div class="chatbox" id="chatbox">
+    <p>Welcome to Random Connect!</p>
+  </div>
+  <input id="message" placeholder="Type your message...">
+  <button class="primary" onclick="sendMessage()">
+    Send Message
+  </button>
+  <button class="secondary" onclick="reportUser()">
+    Report
+  </button>
+  <button class="secondary" onclick="blockUser()">
+    Block
+  </button>
+</div>
+
+<div class="card">
+  <h2>🎁 Girls Coin Earning</h2>
+  <p>Eligible verified users can earn coins under platform rules.</p>
+  <p>Earned Coins: <strong id="earned">0</strong></p>
+  <p id="earningStatus">Verification required</p>
+</div>
+
+<div class="card">
+  <h2>⭐ Premium Features</h2>
+  <p>• Special Profile Badge</p>
+  <p>• Extra Connect Options</p>
+  <p>• Premium Profile Design</p>
+  <p>• Special Chat Features</p>
+</div>
+
+</div>
+
+<footer>
+  <p>18+ Only | Privacy | Safety | Terms</p>
+  <p>© 2026 Random Connect</p>
+</footer>
+
+<script>
+let coins = 0;
+let earned = 0;
+let registered = false;
+let connected = false;
+
+function register() {
+  let name = document.getElementById("username").value;
+  let age = Number(document.getElementById("age").value);
+  let gender = document.getElementById("gender").value;
+
+  if (!name || !age || !gender) {
+    alert("Please fill all details.");
+    return;
+  }
+
+  if (age < 18) {
+    alert("This app is only for adults aged 18+.");
+    return;
+  }
+
+  registered = true;
+  document.getElementById("registerStatus").innerText =
+    "Demo registration successful, " + name + "!";
+}
+
+function connect() {
+  if (!registered) {
+    alert("Please register first.");
+    return;
+  }
+
+  if (coins < 5) {
+    alert("You need 5 coins for this demo connect.");
+    return;
+  }
+
+  coins -= 5;
+  updateWallet();
+  connected = true;
+
+  document.getElementById("matchStatus").innerText =
+    "Demo match screen opened! Real matching needs server setup.";
+}
+
+function stopConnect() {
+  connected = false;
+  document.getElementById("matchStatus").innerText =
+    "Connection stopped.";
+}
+
+function sendMessage() {
+  if (!connected) {
+    alert("Connect first.");
+    return;
+  }
+
+  let message = document.getElementById("message").value;
+
+  if (!message) return;
+
+  let box = document.getElementById("chatbox");
+  let msg = document.createElement("div");
+  msg.className = "message";
+  msg.textContent = message;
+  box.appendChild(msg);
+
+  document.getElementById("message").value = "";
+}
+
+function recharge() {
+  alert("Demo only. Secure payment gateway will be added later.");
+}
+
+function reportUser() {
+  alert("Report submitted in this demo.");
+}
+
+function blockUser() {
+  connected = false;
+  alert("Demo user blocked.");
+}
+
+function updateWallet() {
+  document.getElementById("coins").innerText = coins;
+  document.getElementById("earned").innerText = earned;
+}
+</script>
+
+</body>
+</html>
