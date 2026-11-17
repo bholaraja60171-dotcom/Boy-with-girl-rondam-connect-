@@ -2,347 +2,274 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Connect</title>
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#101020;color:white}
-header{background:#191932;padding:20px;text-align:center;border-bottom:2px solid #8b5cf6}
-header h1{color:#d8b4fe;font-size:25px}
-header p{color:#aaa;margin-top:6px}
-.wallet{margin:18px;padding:20px;background:linear-gradient(120deg,#7028e4,#e43c91);border-radius:16px;text-align:center}
-.wallet h2{font-size:25px}
-.wallet p{margin:8px}
-button{border:0;border-radius:10px;padding:13px 20px;font-size:15px;font-weight:bold;cursor:pointer;margin:5px}
-.primary{background:#a855f7;color:white}
-.secondary{background:#252545;color:white;border:1px solid #777}
-.container{padding:18px}
-.card{background:#1c1c38;padding:20px;border-radius:15px;margin-bottom:16px}
-.card h2{color:#d8b4fe;margin-bottom:12px}
-input,select{width:100%;padding:13px;border-radius:9px;border:1px solid #555;background:#292943;color:white;margin:8px 0}
-.chatbox{height:220px;overflow-y:auto;background:#101020;padding:12px;border-radius:10px;margin:10px 0}
-.message{padding:9px;margin:5px 0;background:#35305b;border-radius:8px;overflow-wrap:anywhere}
-.status{color:#86efac;margin:10px 0}
-footer{text-align:center;color:#aaa;padding:25px;font-size:12px}
-.hidden{display:none}
-.small{font-size:12px;color:#bbb;overflow-wrap:anywhere}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Connect</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 16px;
+      background: #101020;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header { text-align: center; padding: 15px; }
+    h1 { color: #d7a5ff; }
+    .card {
+      background: #191932;
+      border: 1px solid #39345c;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 15px 0;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      border: 0;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    input, select { background: #292943; color: white; }
+    button {
+      background: linear-gradient(90deg,#8e44ad,#bd69e8);
+      color: white;
+      font-weight: bold;
+    }
+    button:disabled { opacity: .5; }
+    .muted { color: #bbb; font-size: 14px; }
+    #chatBox {
+      height: 220px;
+      overflow-y: auto;
+      background: #101020;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+      overflow-wrap: anywhere;
+    }
+    .message { padding: 7px; margin: 5px 0; background: #292943; border-radius: 7px; }
+    .status { color: #d7a5ff; }
+  </style>
 </head>
-
 <body>
-
 <header>
-<h1>💜 Random Connect</h1>
-<p>Meet New People • Make Friends • Chat Online</p>
+  <h1>💜 Random Connect</h1>
+  <p>Meet New People • Make Friends • Chat Online</p>
 </header>
 
-<div class="wallet">
-<h2>🪙 My Coin Wallet</h2>
-<p>Available Coins: <strong id="coins">0</strong></p>
+<div class="card">
+  <h2>🪙 My Coin Wallet</h2>
+  <h2><span id="coins">0</span> Coins</h2>
+  <p class="muted">Recharge और coin earning की सुविधा अभी तैयार नहीं है।</p>
 </div>
 
-<div class="container">
-
-<div class="card" id="authCard">
-<h2>👤 Create Your Account / Login</h2>
-
-<input id="username" placeholder="Your Name">
-<input id="age" type="number" placeholder="Your Age">
-
-<select id="gender">
-<option value="">Select Gender</option>
-<option value="boy">Boy</option>
-<option value="girl">Girl</option>
-</select>
-
-<input id="email" type="email" placeholder="Email Address">
-<input id="password" type="password" placeholder="Password (minimum 6 characters)">
-
-<button class="primary" id="registerBtn">Register Now</button>
-<button class="secondary" id="loginBtn">Login</button>
-
-<p class="status" id="authStatus"></p>
+<div class="card" id="accountCard">
+  <h2>👤 Create Your Account / Login</h2>
+  <input id="name" placeholder="Enter your name">
+  <input id="age" type="number" placeholder="Your age (18+)">
+  <select id="gender">
+    <option value="">Select Gender</option>
+    <option value="boy">Boy</option>
+    <option value="girl">Girl</option>
+  </select>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button id="registerBtn">Register Now</button>
+  <button id="loginBtn">Login</button>
+  <p id="accountStatus" class="status">Ready to connect</p>
 </div>
 
-<div class="card hidden" id="accountCard">
-<h2>✅ My Account</h2>
-<p id="welcome"></p>
-<p class="small">Your User ID:</p>
-<p class="small" id="myUid"></p>
-<button class="secondary" id="logoutBtn">Logout</button>
-</div>
-
-<div class="card hidden" id="chatCard">
-<h2>💬 Live Chat</h2>
-<p>दूसरे यूज़र का User ID डालकर चैट शुरू करें।</p>
-
-<input id="partnerUid" placeholder="Enter Other User ID">
-
-<button class="primary" id="startChatBtn">Start Chat</button>
-
-<p class="status" id="chatStatus">Ready to chat</p>
-
-<div class="chatbox" id="chatbox">
-<p>Welcome to Random Connect!</p>
-</div>
-
-<input id="message" placeholder="Type your message...">
-<button class="primary" id="sendBtn">Send Message</button>
+<div class="card" id="profileCard" hidden>
+  <h2>My Account</h2>
+  <p>Name: <span id="myName"></span></p>
+  <p>Your User ID:</p>
+  <input id="myUid" readonly>
+  <button id="copyUidBtn">Copy My User ID</button>
+  <button id="logoutBtn">Logout</button>
 </div>
 
 <div class="card">
-<h2>🎁 Girls Coin Earning</h2>
-<p>Eligible verified users can earn coins under platform rules.</p>
-<p>Earned Coins: <strong id="earned">0</strong></p>
-<p>Verification required</p>
+  <h2>💬 Live Chat</h2>
+  <p class="muted">दूसरे व्यक्ति का User ID डालकर चैट शुरू करें।</p>
+  <input id="partnerUid" placeholder="Enter Partner User ID">
+  <button id="connectBtn">Connect</button>
+  <p id="chatStatus" class="status">Not connected</p>
+  <div id="chatBox"></div>
+  <input id="messageInput" placeholder="Type your message">
+  <button id="sendBtn">Send Message</button>
 </div>
 
 <div class="card">
-<h2>⭐ Premium Features</h2>
-<p>• Special Profile Badge</p>
-<p>• Extra Connect Options</p>
-<p>• Premium Profile Design</p>
-<p>• Special Chat Features</p>
+  <h2>🌸 Girls Coin Earning</h2>
+  <p>Coin earning सुविधा अभी शुरू नहीं हुई है।</p>
 </div>
 
+<div class="card">
+  <h2>⭐ Premium Features</h2>
+  <p>Premium सुविधाएँ अभी निर्माणाधीन हैं।</p>
 </div>
 
-<footer>
-<p>18+ Only | Privacy | Safety | Terms</p>
-<p>© 2026 Random Connect</p>
+<footer class="muted" style="text-align:center;padding:20px">
+  18+ Only | Privacy | Safety | Terms
 </footer>
 
 <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
 import {
- getAuth,
- createUserWithEmailAndPassword,
- signInWithEmailAndPassword,
- onAuthStateChanged,
- signOut
-}
-from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
 import {
- getFirestore,
- doc,
- setDoc,
- getDoc,
- collection,
- addDoc,
- query,
- orderBy,
- onSnapshot,
- serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  getDatabase, ref, set, get, push, onValue
+} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js";
 
-// YOUR FIREBASE CONFIG
 const firebaseConfig = {
-apiKey: "AIzaSyA2enQH1ezEOo-6vuNWdlzU0R1Dsh6JTu0",
-authDomain: "rondam-connect.firebaseapp.com",
-projectId: "rondam-connect",
-storageBucket: "rondam-connect.firebasestorage.app",
-messagingSenderId: "272514998066",
-appId: "1:272514998066:web:158901b83d86cd7984812b",
-measurementId: "G-QE275FSEZP"
+  apiKey: "AIzaSyA2enQH1ezEOo-6vuNWdlzU0R1Dsh6JTu0",
+  authDomain: "rondam-connect.firebaseapp.com",
+  databaseURL: "https://rondam-connect-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "rondam-connect",
+  storageBucket: "rondam-connect.firebasestorage.app",
+  messagingSenderId: "272514998066",
+  appId: "1:272514998066:web:d8f3e9b41eb291fc84812b",
+  measurementId: "G-H7P1XGCRBL"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-
-let currentUser = null;
-let unsubscribeChat = null;
-let activeRoom = null;
+const db = getDatabase(app);
 
 const $ = id => document.getElementById(id);
+let currentUser = null;
+let stopMessages = null;
+let activeRoom = null;
 
-function status(id,message){
-$(id).textContent = message;
-}
-
-// REGISTER
 $("registerBtn").onclick = async () => {
-try {
-const name = $("username").value.trim();
-const age = Number($("age").value);
-const gender = $("gender").value;
-const email = $("email").value.trim();
-const password = $("password").value;
+  const name = $("name").value.trim();
+  const age = Number($("age").value);
+  const gender = $("gender").value;
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
-if(!name || !age || !gender || !email || !password){
-throw new Error("Please fill all details.");
-}
+  if (!name || age < 18 || !gender || !email || password.length < 6) {
+    $("accountStatus").textContent = "18+ उम्र, सभी जानकारी और कम से कम 6 अक्षर का पासवर्ड भरें।";
+    return;
+  }
 
-if(age < 18){
-throw new Error("This app is only for adults aged 18+.");
-}
-
-if(password.length < 6){
-throw new Error("Password must be at least 6 characters.");
-}
-
-const result = await createUserWithEmailAndPassword(
-auth,email,password
-);
-
-await setDoc(doc(db,"users",result.user.uid),{
-name,age,gender,email,
-createdAt:serverTimestamp()
-});
-
-status("authStatus","Registration successful!");
-
-} catch(error) {
-status("authStatus",error.message);
-}
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await set(ref(db, "users/" + result.user.uid), {
+      name, age, gender, createdAt: Date.now()
+    });
+    $("accountStatus").textContent = "Account created successfully!";
+  } catch (error) {
+    $("accountStatus").textContent = error.message;
+  }
 };
 
-// LOGIN
 $("loginBtn").onclick = async () => {
-try {
-const email = $("email").value.trim();
-const password = $("password").value;
-
-if(!email || !password){
-throw new Error("Enter email and password.");
-}
-
-await signInWithEmailAndPassword(auth,email,password);
-
-status("authStatus","Login successful!");
-
-} catch(error) {
-status("authStatus",error.message);
-}
+  try {
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
+    $("accountStatus").textContent = "Login successful!";
+  } catch (error) {
+    $("accountStatus").textContent = error.message;
+  }
 };
 
-// AUTH STATE
-onAuthStateChanged(auth,async user=>{
-currentUser = user;
-
-if(user){
-$("authCard").classList.add("hidden");
-$("accountCard").classList.remove("hidden");
-$("chatCard").classList.remove("hidden");
-
-$("myUid").textContent = user.uid;
-
-const profile = await getDoc(doc(db,"users",user.uid));
-
-$("welcome").textContent =
-"Welcome, " + (profile.exists()?profile.data().name:user.email);
-
-}else{
-$("authCard").classList.remove("hidden");
-$("accountCard").classList.add("hidden");
-$("chatCard").classList.add("hidden");
-
-if(unsubscribeChat) unsubscribeChat();
-unsubscribeChat = null;
-activeRoom = null;
-}
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  $("accountCard").hidden = !!user;
+  $("profileCard").hidden = !user;
+  if (user) {
+    $("myUid").value = user.uid;
+    get(ref(db, "users/" + user.uid)).then(snapshot => {
+      $("myName").textContent = snapshot.exists() ? snapshot.val().name : "";
+    }).catch(error => {
+      $("accountStatus").textContent = error.message;
+    });
+  }
 });
 
-// LOGOUT
-$("logoutBtn").onclick = async()=>{
-await signOut(auth);
-status("authStatus","Logged out successfully.");
+$("copyUidBtn").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($("myUid").value);
+    $("chatStatus").textContent = "User ID copied!";
+  } catch {
+    $("chatStatus").textContent = "User ID को दबाकर कॉपी करें।";
+  }
 };
 
-// START PRIVATE CHAT
-$("startChatBtn").onclick = async()=>{
-try {
-if(!currentUser) throw new Error("Please login first.");
+$("logoutBtn").onclick = () => signOut(auth);
 
-const otherUid = $("partnerUid").value.trim();
+$("connectBtn").onclick = async () => {
+  if (!currentUser) {
+    $("chatStatus").textContent = "पहले Login करें।";
+    return;
+  }
 
-if(!otherUid || otherUid===currentUser.uid){
-throw new Error("Enter another user's valid ID.");
-}
+  const otherUid = $("partnerUid").value.trim();
+  if (!otherUid || otherUid === currentUser.uid) {
+    $("chatStatus").textContent = "सही दूसरे User ID डालें।";
+    return;
+  }
 
-const otherUser = await getDoc(doc(db,"users",otherUid));
+  try {
+    const other = await get(ref(db, "users/" + otherUid));
+    if (!other.exists()) {
+      $("chatStatus").textContent = "User नहीं मिला।";
+      return;
+    }
 
-if(!otherUser.exists()){
-throw new Error("User not found.");
-}
+    const ids = [currentUser.uid, otherUid].sort();
+    activeRoom = ids.join("_");
 
-const ids = [currentUser.uid,otherUid].sort();
-const roomId = ids.join("_");
+    await set(ref(db, "rooms/" + activeRoom + "/participants"), {
+      [currentUser.uid]: true,
+      [otherUid]: true
+    });
 
-const roomRef = doc(db,"rooms",roomId);
+    if (stopMessages) stopMessages();
 
-await setDoc(roomRef,{
-participants:ids
-},{merge:true});
+    stopMessages = onValue(
+      ref(db, "rooms/" + activeRoom + "/messages"),
+      snapshot => {
+        $("chatBox").innerHTML = "";
+        snapshot.forEach(child => {
+          const msg = child.val();
+          const div = document.createElement("div");
+          div.className = "message";
+          div.textContent = (msg.sender === currentUser.uid ? "You: " : "Partner: ") + msg.text;
+          $("chatBox").appendChild(div);
+        });
+        $("chatBox").scrollTop = $("chatBox").scrollHeight;
+      },
+      error => $("chatStatus").textContent = error.message
+    );
 
-activeRoom = roomId;
-
-if(unsubscribeChat) unsubscribeChat();
-
-const messagesRef = collection(db,"rooms",roomId,"messages");
-
-const q = query(messagesRef,orderBy("createdAt","asc"));
-
-unsubscribeChat = onSnapshot(q,snapshot=>{
-const box = $("chatbox");
-box.innerHTML = "";
-
-snapshot.forEach(item=>{
-const data = item.data();
-const div = document.createElement("div");
-div.className = "message";
-div.textContent =
-(data.sender===currentUser.uid?"You: ":"Friend: ") + data.text;
-box.appendChild(div);
-});
-
-box.scrollTop = box.scrollHeight;
-
-},error=>{
-status("chatStatus",error.message);
-});
-
-status("chatStatus","Connected with "+otherUser.data().name);
-
-}catch(error){
-status("chatStatus",error.message);
-}
+    $("chatStatus").textContent = "Connected!";
+  } catch (error) {
+    $("chatStatus").textContent = error.message;
+  }
 };
 
-// SEND MESSAGE
-$("sendBtn").onclick = async()=>{
-try {
-if(!currentUser || !activeRoom){
-throw new Error("Start a chat first.");
-}
+$("sendBtn").onclick = async () => {
+  const message = $("messageInput").value.trim();
+  if (!currentUser || !activeRoom || !message) {
+    $("chatStatus").textContent = "पहले Login और Connect करें।";
+    return;
+  }
 
-const message = $("message").value.trim();
-
-if(!message) return;
-
-await addDoc(
-collection(db,"rooms",activeRoom,"messages"),
-{
-text:message,
-sender:currentUser.uid,
-createdAt:serverTimestamp()
-}
-);
-
-$("message").value="";
-
-}catch(error){
-status("chatStatus",error.message);
-}
+  try {
+    await push(ref(db, "rooms/" + activeRoom + "/messages"), {
+      sender: currentUser.uid,
+      text: message,
+      createdAt: Date.now()
+    });
+    $("messageInput").value = "";
+  } catch (error) {
+    $("chatStatus").textContent = error.message;
+  }
 };
-
 </script>
 </body>
 </html>
