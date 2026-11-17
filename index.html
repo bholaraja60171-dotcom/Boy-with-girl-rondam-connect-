@@ -2,274 +2,219 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Connect</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 16px;
-      background: #101020;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
-    header { text-align: center; padding: 15px; }
-    h1 { color: #d7a5ff; }
-    .card {
-      background: #191932;
-      border: 1px solid #39345c;
-      border-radius: 14px;
-      padding: 16px;
-      margin: 15px 0;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 7px 0;
-      border: 0;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    input, select { background: #292943; color: white; }
-    button {
-      background: linear-gradient(90deg,#8e44ad,#bd69e8);
-      color: white;
-      font-weight: bold;
-    }
-    button:disabled { opacity: .5; }
-    .muted { color: #bbb; font-size: 14px; }
-    #chatBox {
-      height: 220px;
-      overflow-y: auto;
-      background: #101020;
-      padding: 10px;
-      border-radius: 8px;
-      margin: 10px 0;
-      overflow-wrap: anywhere;
-    }
-    .message { padding: 7px; margin: 5px 0; background: #292943; border-radius: 7px; }
-    .status { color: #d7a5ff; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Random Connect</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#101020;color:white;font-family:Arial}
+.app{max-width:450px;margin:auto}
+h1{text-align:center;color:#d9aaff}
+.card{background:#191932;padding:18px;border-radius:15px;margin:15px 0}
+button,input{width:100%;padding:14px;margin:7px 0;border:0;border-radius:9px;font-size:16px}
+button{background:#9849dc;color:white;font-weight:bold}
+.secondary{background:#393952}
+#messages{height:220px;overflow:auto;background:#101020;padding:10px;border-radius:8px}
+.msg{background:#292943;padding:9px;margin:6px 0;border-radius:8px}
+#status{text-align:center;color:#e3b5ff;min-height:25px}
+.hidden{display:none}
+</style>
 </head>
 <body>
-<header>
-  <h1>💜 Random Connect</h1>
-  <p>Meet New People • Make Friends • Chat Online</p>
-</header>
+<div class="app">
+<h1>💜 Random Connect</h1>
+<p style="text-align:center">Meet New People • Make Friends • Chat Online</p>
 
-<div class="card">
-  <h2>🪙 My Coin Wallet</h2>
-  <h2><span id="coins">0</span> Coins</h2>
-  <p class="muted">Recharge और coin earning की सुविधा अभी तैयार नहीं है।</p>
+<div class="card" id="loginCard">
+<h2>Welcome</h2>
+<button id="googleBtn">Continue with Google</button>
 </div>
 
-<div class="card" id="accountCard">
-  <h2>👤 Create Your Account / Login</h2>
-  <input id="name" placeholder="Enter your name">
-  <input id="age" type="number" placeholder="Your age (18+)">
-  <select id="gender">
-    <option value="">Select Gender</option>
-    <option value="boy">Boy</option>
-    <option value="girl">Girl</option>
-  </select>
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button id="registerBtn">Register Now</button>
-  <button id="loginBtn">Login</button>
-  <p id="accountStatus" class="status">Ready to connect</p>
+<div class="card hidden" id="homeCard">
+<h2>आपका स्वागत है!</h2>
+<button id="findBtn">🔎 Find Someone</button>
+<button class="secondary" id="stopBtn">Stop Searching</button>
 </div>
 
-<div class="card" id="profileCard" hidden>
-  <h2>My Account</h2>
-  <p>Name: <span id="myName"></span></p>
-  <p>Your User ID:</p>
-  <input id="myUid" readonly>
-  <button id="copyUidBtn">Copy My User ID</button>
-  <button id="logoutBtn">Logout</button>
+<div class="card hidden" id="chatCard">
+<h2>💬 Live Chat</h2>
+<div id="messages"></div>
+<input id="messageInput" placeholder="अपना मैसेज लिखें">
+<button id="sendBtn">Send Message</button>
 </div>
 
-<div class="card">
-  <h2>💬 Live Chat</h2>
-  <p class="muted">दूसरे व्यक्ति का User ID डालकर चैट शुरू करें।</p>
-  <input id="partnerUid" placeholder="Enter Partner User ID">
-  <button id="connectBtn">Connect</button>
-  <p id="chatStatus" class="status">Not connected</p>
-  <div id="chatBox"></div>
-  <input id="messageInput" placeholder="Type your message">
-  <button id="sendBtn">Send Message</button>
+<p id="status">ऐप शुरू हो रहा है...</p>
 </div>
-
-<div class="card">
-  <h2>🌸 Girls Coin Earning</h2>
-  <p>Coin earning सुविधा अभी शुरू नहीं हुई है।</p>
-</div>
-
-<div class="card">
-  <h2>⭐ Premium Features</h2>
-  <p>Premium सुविधाएँ अभी निर्माणाधीन हैं।</p>
-</div>
-
-<footer class="muted" style="text-align:center;padding:20px">
-  18+ Only | Privacy | Safety | Terms
-</footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+import {initializeApp} from
+"https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js";
+
 import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+ getAuth,GoogleAuthProvider,signInWithPopup,
+ setPersistence,browserLocalPersistence,onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js";
+
 import {
-  getDatabase, ref, set, get, push, onValue
-} from "https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js";
+ getDatabase,ref,onValue,push,runTransaction,remove,serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/13.3.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA2enQH1ezEOo-6vuNWdlzU0R1Dsh6JTu0",
-  authDomain: "rondam-connect.firebaseapp.com",
-  databaseURL: "https://rondam-connect-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "rondam-connect",
-  storageBucket: "rondam-connect.firebasestorage.app",
-  messagingSenderId: "272514998066",
-  appId: "1:272514998066:web:d8f3e9b41eb291fc84812b",
-  measurementId: "G-H7P1XGCRBL"
+const firebaseConfig={
+ apiKey:"AIzaSyA2enQH1ezEOo-6vuNWdlU0R1Dsh6JTu0",
+ authDomain:"rondam-connect.firebaseapp.com",
+ databaseURL:"https://rondam-connect-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId:"rondam-connect",
+ storageBucket:"rondam-connect.firebasestorage.app",
+ messagingSenderId:"272514998066",
+ appId:"1:272514998066:web:d8f3e9b41eb291fc84812b",
+ measurementId:"G-H7P1XGCRBL"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+const provider=new GoogleAuthProvider();
 
-const $ = id => document.getElementById(id);
-let currentUser = null;
-let stopMessages = null;
-let activeRoom = null;
+const $=id=>document.getElementById(id);
+let user=null,roomId=null,messageListener=null,matchListener=null;
 
-$("registerBtn").onclick = async () => {
-  const name = $("name").value.trim();
-  const age = Number($("age").value);
-  const gender = $("gender").value;
-  const email = $("email").value.trim();
-  const password = $("password").value;
+function status(t){$("status").textContent=t;}
 
-  if (!name || age < 18 || !gender || !email || password.length < 6) {
-    $("accountStatus").textContent = "18+ उम्र, सभी जानकारी और कम से कम 6 अक्षर का पासवर्ड भरें।";
-    return;
-  }
+function roomName(a,b){return [a,b].sort().join("_");}
 
-  try {
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    await set(ref(db, "users/" + result.user.uid), {
-      name, age, gender, createdAt: Date.now()
-    });
-    $("accountStatus").textContent = "Account created successfully!";
-  } catch (error) {
-    $("accountStatus").textContent = error.message;
-  }
+await setPersistence(auth,browserLocalPersistence);
+
+$("googleBtn").onclick=async()=>{
+ try{
+  status("Google से जुड़ रहे हैं...");
+  await signInWithPopup(auth,provider);
+ }catch(e){
+  status("Google Login में समस्या: "+e.message);
+ }
 };
 
-$("loginBtn").onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
-    $("accountStatus").textContent = "Login successful!";
-  } catch (error) {
-    $("accountStatus").textContent = error.message;
-  }
-};
-
-onAuthStateChanged(auth, user => {
-  currentUser = user;
-  $("accountCard").hidden = !!user;
-  $("profileCard").hidden = !user;
-  if (user) {
-    $("myUid").value = user.uid;
-    get(ref(db, "users/" + user.uid)).then(snapshot => {
-      $("myName").textContent = snapshot.exists() ? snapshot.val().name : "";
-    }).catch(error => {
-      $("accountStatus").textContent = error.message;
-    });
-  }
+onAuthStateChanged(auth,u=>{
+ user=u;
+ if(u){
+  $("loginCard").classList.add("hidden");
+  $("homeCard").classList.remove("hidden");
+  status("आप जुड़ गए हैं। Find Someone दबाएँ।");
+ }else{
+  $("loginCard").classList.remove("hidden");
+  $("homeCard").classList.add("hidden");
+  $("chatCard").classList.add("hidden");
+  status("Continue with Google दबाएँ।");
+ }
 });
 
-$("copyUidBtn").onclick = async () => {
-  try {
-    await navigator.clipboard.writeText($("myUid").value);
-    $("chatStatus").textContent = "User ID copied!";
-  } catch {
-    $("chatStatus").textContent = "User ID को दबाकर कॉपी करें।";
-  }
-};
+async function stopSearch(){
+ if(!user)return;
+ if(matchListener){matchListener();matchListener=null;}
+ try{
+  await remove(ref(db,"matchmaker/waiting/"+user.uid));
+  status("खोज रोक दी गई।");
+ }catch(e){status("रोकने में समस्या: "+e.message);}
+}
+$("stopBtn").onclick=stopSearch;
 
-$("logoutBtn").onclick = () => signOut(auth);
+$("findBtn").onclick=async()=>{
+ if(!user)return;
+ $("findBtn").disabled=true;
+ $("chatCard").classList.add("hidden");
+ status("दूसरे ऑनलाइन यूजर को खोज रहे हैं...");
 
-$("connectBtn").onclick = async () => {
-  if (!currentUser) {
-    $("chatStatus").textContent = "पहले Login करें।";
-    return;
-  }
+ try{
+  const uid=user.uid;
+  const result=await runTransaction(ref(db,"matchmaker"),data=>{
+   data=data||{};
+   data.waiting=data.waiting||{};
+   data.matches=data.matches||{};
 
-  const otherUid = $("partnerUid").value.trim();
-  if (!otherUid || otherUid === currentUser.uid) {
-    $("chatStatus").textContent = "सही दूसरे User ID डालें।";
-    return;
-  }
+   if(data.matches[uid])return;
 
-  try {
-    const other = await get(ref(db, "users/" + otherUid));
-    if (!other.exists()) {
-      $("chatStatus").textContent = "User नहीं मिला।";
-      return;
+   const other=Object.keys(data.waiting).find(
+    id=>id!==uid && data.waiting[id]?.status==="waiting"
+   );
+
+   if(other){
+    const room=roomName(uid,other);
+    delete data.waiting[other];
+    data.matches[uid]={peerUid:other,roomId:room};
+    data.matches[other]={peerUid:uid,roomId:room};
+   }else{
+    data.waiting[uid]={status:"waiting",createdAt:Date.now()};
+   }
+   return data;
+  });
+
+  const match=result.snapshot.child("matches/"+uid).val();
+  if(match?.roomId){
+   await openChat(match.roomId);
+  }else{
+   status("आप कतार में हैं। दूसरे यूजर का इंतज़ार है...");
+   matchListener=onValue(
+    ref(db,"matchmaker/matches/"+uid),
+    async snap=>{
+     const m=snap.val();
+     if(m?.roomId){
+      matchListener?.();
+      matchListener=null;
+      await openChat(m.roomId);
+     }
     }
-
-    const ids = [currentUser.uid, otherUid].sort();
-    activeRoom = ids.join("_");
-
-    await set(ref(db, "rooms/" + activeRoom + "/participants"), {
-      [currentUser.uid]: true,
-      [otherUid]: true
-    });
-
-    if (stopMessages) stopMessages();
-
-    stopMessages = onValue(
-      ref(db, "rooms/" + activeRoom + "/messages"),
-      snapshot => {
-        $("chatBox").innerHTML = "";
-        snapshot.forEach(child => {
-          const msg = child.val();
-          const div = document.createElement("div");
-          div.className = "message";
-          div.textContent = (msg.sender === currentUser.uid ? "You: " : "Partner: ") + msg.text;
-          $("chatBox").appendChild(div);
-        });
-        $("chatBox").scrollTop = $("chatBox").scrollHeight;
-      },
-      error => $("chatStatus").textContent = error.message
-    );
-
-    $("chatStatus").textContent = "Connected!";
-  } catch (error) {
-    $("chatStatus").textContent = error.message;
+   );
   }
+ }catch(e){
+  status("कनेक्शन में समस्या: "+e.message);
+  $("findBtn").disabled=false;
+ }
 };
 
-$("sendBtn").onclick = async () => {
-  const message = $("messageInput").value.trim();
-  if (!currentUser || !activeRoom || !message) {
-    $("chatStatus").textContent = "पहले Login और Connect करें।";
-    return;
-  }
+async function openChat(id){
+ roomId=id;
+ $("chatCard").classList.remove("hidden");
+ $("messages").innerHTML="";
+ $("findBtn").disabled=false;
+ status("कनेक्शन बन गया! अब चैट करें।");
 
-  try {
-    await push(ref(db, "rooms/" + activeRoom + "/messages"), {
-      sender: currentUser.uid,
-      text: message,
-      createdAt: Date.now()
-    });
-    $("messageInput").value = "";
-  } catch (error) {
-    $("chatStatus").textContent = error.message;
+ if(messageListener)messageListener();
+
+ messageListener=onValue(
+  ref(db,"rooms/"+id+"/messages"),
+  snap=>{
+   $("messages").innerHTML="";
+   const data=snap.val()||{};
+   Object.values(data).forEach(m=>{
+    const div=document.createElement("div");
+    div.className="msg";
+    div.textContent=(m.uid===user.uid?"आप: ":"दूसरे यूजर: ")+m.text;
+    $("messages").appendChild(div);
+   });
+   $("messages").scrollTop=$("messages").scrollHeight;
   }
+ );
+}
+
+$("sendBtn").onclick=async()=>{
+ const message=$("messageInput").value.trim();
+ if(!message||!roomId||!user)return;
+ try{
+  await push(ref(db,"rooms/"+roomId+"/messages"),{
+   uid:user.uid,
+   text:message,
+   createdAt:serverTimestamp()
+  });
+  $("messageInput").value="";
+ }catch(e){
+  status("मैसेज नहीं भेजा गया: "+e.message);
+ }
 };
+
+$("messageInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter")$("sendBtn").click();
+});
 </script>
 </body>
 </html>
